@@ -16,5 +16,7 @@
     <item
         android:id="@+id/action_setting"
         android:title="@string/stConfigurar" />
-    <item android:title="@string/stAcercaDe" />
+    <item
+        android:id="@+id/action_about"
+        android:title="@string/stAcercaDe" />
 </menu>
