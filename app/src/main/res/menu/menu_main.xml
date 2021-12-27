@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_ordenar"
+        android:icon="@android:drawable/ic_menu_sort_alphabetically"
+        android:title="@string/stOrdenar"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_valoraVida"
+        android:title="@string/stValoraVida" />
+    <item
+        android:id="@+id/action_fechas"
+        android:title="@string/stMostrarEntreFechas" />
+    <item
+        android:id="@+id/action_setting"
+        android:title="@string/stConfigurar" />
+    <item android:title="@string/stAcercaDe" />
+</menu>
