@@ -7,4 +7,21 @@
     <string name="stAcercaDe">Acerca de...</string>
     <string name="stAsc">Asc</string>
     <string name="stDesc">Desc</string>
+    <string name="stTextoHintResumenBreve">Resumen breve del día</string>
+    <string name="stValorarVida">Valorar Vida</string>
+    <string name="stHintDiario">Cuenta a tu diario tu día</string>
+
+    <string-array name="valoracion">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
 </resources>

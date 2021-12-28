@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica5.NoActionBar">
         <activity
+            android:name=".ui.EdicionDiaActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
