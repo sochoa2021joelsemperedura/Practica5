@@ -24,4 +24,6 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+    <string name="stAlerta">Alerta</string>
+    <string name="stMensajeAlertDialog">Es necesario rellenar todos los campos</string>
 </resources>
