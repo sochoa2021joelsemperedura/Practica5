@@ -105,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
     private void anyadirDia(DiaDiario diaDiario){
         diarioViewModel.insert(diaDiario);
     }
-    private void modificarDia(DiaDiario diaDiario){//TODO diarioViewModel.}
+    private void modificarDia(DiaDiario diaDiario){
+        //TODO
+    }
     //Borrado con dialogo de aviso.
     private void borrarDia(DiaDiario diaDiario){
         AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
