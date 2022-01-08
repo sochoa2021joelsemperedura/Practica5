@@ -34,7 +34,7 @@ public interface DiarioDao {
     @Query("SELECT * FROM "+DiaDiario.TABLE_NAME+" WHERE "+DiaDiario.RESUMEN+" LIKE '%' || :resumen || '%'")
     LiveData<List<DiaDiario>>getDiarioOrderBy(String resumen); //Nos devuelve el diario con aquellos dias que contienen la palabra "resumen" en el campo Resumen del diaDiario
 
-    @Query("SELECT AVG(*) FROM "+DiaDiario.TABLE_NAME)
+    @Query("SELECT AVG("+DiaDiario.VALORACION_DIA+") FROM "+DiaDiario.TABLE_NAME)
     Single<Float>getValoracionTotal(); //Nos devuelve el AVG de la valoracion de todos los dias en un objeto observable(rxJava).Aun por ver
 
 }
