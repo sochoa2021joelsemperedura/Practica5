@@ -60,9 +60,9 @@ public class EdicionDiaActivity extends AppCompatActivity {
             //posicion del valor por defecto del spinner
             spValoracion.setSelection(5);
         }else{
-            //TODO añadir todos los datos a los campos correspondientes y verificar que funciona
-            this.setTitle(getString(R.string.stTarea)+" "+diaDiario.getId()); //id del diaDiario como titulo
             this.diaDiario = iBack.getParcelableExtra(EXTRA_EDICION_DIA); //recupero objeto
+            this.setTitle(getString(R.string.stTarea)+" "+diaDiario.getId()); //id del diaDiario como titulo
+
 
             spValoracion.setSelection(adaptadorValoracion.getPosition(String.valueOf(diaDiario.getValoracionDia()))); //valoracion del objeto
             tvFecha.setText( diaDiario.getFecha().toString() ); //Revisar si captura la fecha como string
@@ -86,10 +86,11 @@ public class EdicionDiaActivity extends AppCompatActivity {
                             newFecha,Integer.parseInt(spValoracion.getSelectedItem().toString()),
                             etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
                 }else{ //si ya existe
-
-                    //TODO pendiente de verificar
                    diaDiario.setContenido(etDiarioTexto.getText().toString());
-                   diaDiario.setFecha(newFecha);
+                   //asi me quito un error
+                   if (newFecha != null){
+                       diaDiario.setFecha(newFecha);
+                   }
                    diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
                    diaDiario.setResumen(etResumenBreve.getText().toString());
                    // diaDiario.setFotoUri(); //TODO mirar esto más adelante, sera lo de las caritas que se sacara con el metodo de resumen

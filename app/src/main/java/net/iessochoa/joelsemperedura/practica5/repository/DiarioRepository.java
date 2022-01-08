@@ -71,6 +71,12 @@ public class DiarioRepository {
             mDiarioDao.deleteByDiaDiario(diaDiario);
         });
     }
-    //TODO deleteAll,update
+    //update
+    public void update(DiaDiario diaDiario){
+        DiarioDatabase.databaseWriteExecutor.execute(()->{
+            mDiarioDao.update(diaDiario);
+        });
+    }
+    //TODO deleteAll
 
 }

@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
 import net.iessochoa.joelsemperedura.practica5.repository.DiarioRepository;
@@ -15,12 +16,14 @@ public class DiarioViewModel extends AndroidViewModel {
     private DiarioRepository mRepository;
     private LiveData<List<DiaDiario>> mAllDiarios;
 
+
     public DiarioViewModel(@NonNull Application application) {
         super(application);
 
         mRepository=DiarioRepository.getInstance(application);
         //Recuperamos el LiveData de todos los diasDiarios
         mAllDiarios=mRepository.getAllDiarios();
+
     }
 
     public LiveData<List<DiaDiario>> getAllDiarios() {
@@ -32,6 +35,11 @@ public class DiarioViewModel extends AndroidViewModel {
     }
     public void delete(DiaDiario diaDiario){
         mRepository.delete(diaDiario);
+    }
+    //todo revisar
+    public void update(DiaDiario diaDiario){
+            mRepository.update(diaDiario);
+
     }
 
 }

@@ -26,7 +26,6 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
     //definimos la interface para el control del click
     private onItemClickListener listener;
     private onItemBorrarClickListener listenerBorrar;
-    private DiarioViewModel diarioViewModel;
 
     //************INTERFACES************//
     public interface onItemClickListener{
@@ -42,7 +41,6 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
     {
         this.listener=listener;
     }
-
     public void setOnBorrarClickListener(onItemBorrarClickListener listener){
         this.listenerBorrar=listener;
     }
@@ -62,7 +60,7 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
             holder.tvResumenItem.setText(diaDiario.getResumen());
             holder.tvFechaItem.setText(diaDiario.getFechaFormatoLocal()); //revisar que fecha me devuelve
             //asignamos el listener
-            if(listener!=null){
+           /* if(listener!=null){
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -70,6 +68,8 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
                     }
                 });
             }
+
+            */
 
 
         }
@@ -107,6 +107,15 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
                         //si se pulsa al icono borrar, le pasamos la nota. Podemos saber la posición del item en la lista
                         listenerBorrar.onItemBorrarClick(mDiarios.get( DiarioViewHolder.this.getAdapterPosition()));
 
+                    }
+                }
+            });
+            //ABRIR ITEM DIA
+            cvItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        listener.onItemClick(mDiarios.get(DiarioViewHolder.this.getAdapterPosition()));
                     }
                 }
             });
