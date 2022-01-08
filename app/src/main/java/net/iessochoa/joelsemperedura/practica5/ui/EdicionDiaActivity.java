@@ -55,12 +55,21 @@ public class EdicionDiaActivity extends AppCompatActivity {
 
         iBack = getIntent(); //recupera el intent y verifica si es nuevo o existente
         if (iBack.getParcelableExtra(EXTRA_EDICION_DIA) == null){
+            this.setTitle(getString(R.string.stNuevaTarea)); //titulo
+            this.diaDiario = null;
             //posicion del valor por defecto del spinner
             spValoracion.setSelection(5);
         }else{
-            //TODO añadir todos los datos a los campos correspondientes
+            //TODO añadir todos los datos a los campos correspondientes y verificar que funciona
+            this.setTitle(getString(R.string.stTarea)+" "+diaDiario.getId()); //id del diaDiario como titulo
             this.diaDiario = iBack.getParcelableExtra(EXTRA_EDICION_DIA); //recupero objeto
+
             spValoracion.setSelection(adaptadorValoracion.getPosition(String.valueOf(diaDiario.getValoracionDia()))); //valoracion del objeto
+            tvFecha.setText( diaDiario.getFecha().toString() ); //Revisar si captura la fecha como string
+            etResumenBreve.setText( diaDiario.getResumen() );
+            etDiarioTexto.setText( diaDiario.getContenido() );
+            //TODO falta la foto, no se si aqui se recoge, dejar para luego
+
         }
 
 
@@ -78,7 +87,14 @@ public class EdicionDiaActivity extends AppCompatActivity {
                             etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
                 }else{ //si ya existe
 
-                    //TODO
+                    //TODO pendiente de verificar
+                   diaDiario.setContenido(etDiarioTexto.getText().toString());
+                   diaDiario.setFecha(newFecha);
+                   diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
+                   diaDiario.setResumen(etResumenBreve.getText().toString());
+                   // diaDiario.setFotoUri(); //TODO mirar esto más adelante, sera lo de las caritas que se sacara con el metodo de resumen
+
+                   iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
 
                 }
                 setResult(RESULT_OK,iBack);

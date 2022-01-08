@@ -26,4 +26,6 @@
     </string-array>
     <string name="stAlerta">Alerta</string>
     <string name="stMensajeAlertDialog">Es necesario rellenar todos los campos</string>
+    <string name="stNuevaTarea">Nueva Tarea</string>
+    <string name="stTarea">Tarea</string>
 </resources>

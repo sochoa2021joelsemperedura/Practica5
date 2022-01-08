@@ -35,22 +35,22 @@ public class MainActivity extends AppCompatActivity {
 
        fabAnyadir.setOnClickListener(e->{
           Intent intent = new Intent(MainActivity.this, EdicionDiaActivity.class);
-            startActivityForResult(intent,OPTION_REQUEST_NUEVA); //probando, main aun no realizado
+            startActivityForResult(intent,OPTION_REQUEST_NUEVA); //abre edicionDiaActivity con un nuevo DiaDiario
         });
 
     }
-    //Cargar el menu personalizado
+    //*************************MENU****************************//
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
-
+    //*************************VIEWS****************************//
     public void iniciaViews(){
         fabAnyadir = findViewById(R.id.fabAnyadir);
         toolbar = findViewById(R.id.toolbar);
     }
-
+    //*************************OPCIONES**ITEMS**MENU****************************//
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -59,9 +59,10 @@ public class MainActivity extends AppCompatActivity {
             diaDiario = (DiaDiario)data.getParcelableExtra(EdicionDiaActivity.EXTRA_EDICION_DIA);
             switch (requestCode){
                 case OPTION_REQUEST_NUEVA:
-
+                    //TODO metodo anyadirDiaDiario(diaDiario) que traiga el dato desde viewModel
                     break;
                 case OPTION_REQUEST_MODIFICAR:
+                    //TODO metodo modificarDiaDiario(diaDiario) que traiga el dato desde viewModel
                     break;
             }
         }
