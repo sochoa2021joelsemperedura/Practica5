@@ -4,16 +4,24 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.BaseColumns;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+//TODO hacer la base de datos
+@Entity(tableName = DiaDiario.TABLE_NAME,
+        indices = {@Index(value = {DiaDiario.FECHA},unique = true)})
 public class DiaDiario implements Parcelable {
     /*
     POJO que mantendra la informacion de un dia del diario.
      */
+
     public static final String TABLE_NAME = "diario";
-    //averiguar funcionamiento de esto
     public static final String ID = BaseColumns._ID;
     public static final String FECHA ="fecha";
     public static final String VALORACION_DIA = "valoracion_dia";
@@ -21,17 +29,34 @@ public class DiaDiario implements Parcelable {
     public static final String CONTENIDO = "contenido";
     public static final String FOTO_URI = "foto_uri";
 
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name = ID)
     private int id; //clave del dia
+
+    @ColumnInfo(name = FECHA)
+    @NonNull
     private Date fecha; //dia del diario, UNIQUE
+
+    @ColumnInfo(name = VALORACION_DIA)
     private int valoracionDia; //entero 0 - 10
+
+    @ColumnInfo(name = RESUMEN)
+    @NonNull
     private String resumen; //Breve resumen del dia
+
+    @ColumnInfo(name = CONTENIDO)
+    @NonNull
     private String contenido; //el contenido escrito por el usuario en el diario
+
+    @ColumnInfo(name = FOTO_URI)
+    @NonNull
     private String fotoUri; //imagen representativa del dia
 
 
     //*************CONSTRUCTORES*************//
 
-
+    /*
     public DiaDiario(Date fecha, int valoracionDia, String resumen, String contenido, String fotoUri) {
         this.fecha = fecha;
         this.valoracionDia = valoracionDia;
@@ -39,8 +64,10 @@ public class DiaDiario implements Parcelable {
         this.contenido = contenido;
         this.fotoUri = fotoUri;
     }
+     */
 
-    public DiaDiario(Date fecha, int valoracionDia, String resumen, String contenido) {
+    //Room solo nos permite el uso de un constructor
+    public DiaDiario(@NonNull Date fecha, int valoracionDia,@NonNull String resumen,@NonNull String contenido) {
         this.fecha = fecha;
         this.valoracionDia = valoracionDia;
         this.resumen = resumen;
