@@ -28,4 +28,6 @@
     <string name="stMensajeAlertDialog">Es necesario rellenar todos los campos</string>
     <string name="stNuevaTarea">Nueva Tarea</string>
     <string name="stTarea">Tarea</string>
+    <string name="stAviso">Aviso</string>
+    <string name="stAvisoMensaje">Realmente desea eliminar la tarea con id</string>
 </resources>

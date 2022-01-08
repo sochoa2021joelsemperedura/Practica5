@@ -1,15 +1,61 @@
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cvItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardBackgroundColor="@android:color/holo_orange_light"
     card_view:cardCornerRadius="16dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/ivBorrarItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/ivValoracionItem"
+            card_view:layout_constraintEnd_toEndOf="parent"
+            card_view:layout_constraintTop_toTopOf="@+id/ivValoracionItem"
+            card_view:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <ImageView
+            android:id="@+id/ivValoracionItem"
+            android:layout_width="40dp"
+            android:layout_height="53dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintStart_toStartOf="parent"
+            card_view:layout_constraintTop_toTopOf="parent"
+            card_view:srcCompat="@drawable/ic_neutro" />
+
+        <TextView
+            android:id="@+id/tvResumenItem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textStyle="bold"
+            card_view:layout_constraintBottom_toBottomOf="@+id/ivValoracionItem"
+            card_view:layout_constraintEnd_toStartOf="@+id/ivBorrarItem"
+            card_view:layout_constraintStart_toEndOf="@+id/ivValoracionItem"
+            card_view:layout_constraintTop_toTopOf="@+id/ivValoracionItem"
+            card_view:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/tvFechaItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            card_view:layout_constraintBottom_toBottomOf="@+id/ivValoracionItem"
+            card_view:layout_constraintStart_toStartOf="@+id/tvResumenItem"
+            card_view:layout_constraintTop_toBottomOf="@+id/tvResumenItem" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

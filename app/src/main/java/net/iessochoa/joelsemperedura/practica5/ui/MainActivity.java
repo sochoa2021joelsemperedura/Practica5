@@ -1,11 +1,15 @@
 package net.iessochoa.joelsemperedura.practica5.ui;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,8 +29,10 @@ public class MainActivity extends AppCompatActivity {
     public static final int OPTION_REQUEST_NUEVA = 0; //nuevo día
     public static final int OPTION_REQUEST_MODIFICAR = 1; //modificar día
 
+    RecyclerView rvLista;
     // nos permite mantener los datos cuando se reconstruye la actividad
     private DiarioViewModel diarioViewModel;
+
 
     FloatingActionButton fabAnyadir;
     Toolbar toolbar;
@@ -38,9 +44,14 @@ public class MainActivity extends AppCompatActivity {
 
         //inicia las views
         iniciaViews();
-
         //Asignar Toolbar a la actividad
         setSupportActionBar(toolbar);
+
+        //***establece el layout del reclyclerView y le añade el adapter***//
+        final DiarioListAdapter adapter = new DiarioListAdapter(this);
+        rvLista.setAdapter(adapter);
+        rvLista.setLayoutManager(new LinearLayoutManager(this));
+
 
         //Recuperacion o creacion del viewModel
         diarioViewModel = new ViewModelProvider(this).get(DiarioViewModel.class);
@@ -48,14 +59,32 @@ public class MainActivity extends AppCompatActivity {
         diarioViewModel.getAllDiarios().observe(this, new Observer<List<DiaDiario>>() {
             @Override
             public void onChanged(List<DiaDiario> diaDiarios) {
-                //TODO Actualizamos el RecyclerView cuando exista
-               Log.d("P5","tamaño: "+diaDiarios.size());
+               adapter.setDiarios(diaDiarios);
+               //Log.d("P5","tamaño: "+diaDiarios.size());
             }
         });
 
+        //Nuevo DiaDiario
        fabAnyadir.setOnClickListener(e->{
           Intent intent = new Intent(MainActivity.this, EdicionDiaActivity.class);
             startActivityForResult(intent,OPTION_REQUEST_NUEVA); //abre edicionDiaActivity con un nuevo DiaDiario
+        });
+
+       //Borrar DiaDiario
+        adapter.setOnBorrarClickListener(new DiarioListAdapter.onItemBorrarClickListener() {
+            @Override
+            public void onItemBorrarClick(DiaDiario diaDiario) {
+                borrarDia(diaDiario);
+            }
+        });
+        //editar DiaDiario
+        adapter.setOnClickListener(new DiarioListAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(DiaDiario diaDiario) {
+                Intent intent = new Intent(MainActivity.this,EdicionDiaActivity.class);
+                intent.putExtra(EdicionDiaActivity.EXTRA_EDICION_DIA,diaDiario);
+                startActivityForResult(intent,OPTION_REQUEST_MODIFICAR);
+            }
         });
 
     }
@@ -69,11 +98,35 @@ public class MainActivity extends AppCompatActivity {
     public void iniciaViews(){
         fabAnyadir = findViewById(R.id.fabAnyadir);
         toolbar = findViewById(R.id.toolbar);
+        rvLista = findViewById(R.id.rvLista);
     }
 
     //*************************MANEJO**DATOS****************************//
     private void anyadirDia(DiaDiario diaDiario){
         diarioViewModel.insert(diaDiario);
+    }
+    private void modificarDia(DiaDiario diaDiario){//TODO diarioViewModel.}
+    //Borrado con dialogo de aviso.
+    private void borrarDia(DiaDiario diaDiario){
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
+        dialogo.setTitle(getString(R.string.stAviso)); //titulo
+        dialogo.setMessage(getString(R.string.stAvisoMensaje)+diaDiario.getId()); //mensaje
+
+        //boton ok y evento
+        dialogo.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // en caso de ok
+                diarioViewModel.delete(diaDiario);
+            }
+        });
+        dialogo.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //en caso de cancel nada
+            }
+        });
+        dialogo.show();
     }
 
     //*************************OPCIONES**ITEMS**MENU****************************//
@@ -88,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
                     anyadirDia(diaDiario);
                     break;
                 case OPTION_REQUEST_MODIFICAR:
-                    //TODO metodo modificarDiaDiario(diaDiario) que traiga el dato desde viewModel
+                    modificarDia(diaDiario);
                     break;
             }
         }
