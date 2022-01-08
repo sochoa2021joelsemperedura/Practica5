@@ -58,19 +58,16 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
         if (mDiarios != null) {
             final DiaDiario diaDiario = mDiarios.get(position);
             holder.tvResumenItem.setText(diaDiario.getResumen());
-            holder.tvFechaItem.setText(diaDiario.getFechaFormatoLocal()); //revisar que fecha me devuelve
-            //asignamos el listener
-           /* if(listener!=null){
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        listener.onItemClick(diaDiario);
-                    }
-                });
+            holder.tvFechaItem.setText(diaDiario.getFechaFormatoLocal());
+
+            //Asignacion imagen emoticono
+            if (diaDiario.getValoracionDia() < 5) {
+                holder.ivValoracionItem.setImageResource(R.drawable.ic_sad);
+            } else if (diaDiario.getValoracionDia() < 8) {
+                holder.ivValoracionItem.setImageResource(R.drawable.ic_neutro);
+            } else if (diaDiario.getValoracionDia() >= 8){
+                holder.ivValoracionItem.setImageResource(R.drawable.ic_smile);
             }
-
-            */
-
 
         }
     }
