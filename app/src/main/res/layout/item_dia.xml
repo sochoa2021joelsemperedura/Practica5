@@ -4,7 +4,7 @@
     android:id="@+id/cvItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="@android:color/holo_orange_light"
+    card_view:cardBackgroundColor="?attr/colorSecondaryVariant"
     card_view:cardCornerRadius="16dp"
     card_view:cardElevation="4dp"
     card_view:cardUseCompatPadding="true">

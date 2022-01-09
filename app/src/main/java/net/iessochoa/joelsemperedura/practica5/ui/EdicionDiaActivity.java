@@ -68,7 +68,6 @@ public class EdicionDiaActivity extends AppCompatActivity {
             tvFecha.setText( diaDiario.getFecha().toString() ); //Revisar si captura la fecha como string
             etResumenBreve.setText( diaDiario.getResumen() );
             etDiarioTexto.setText( diaDiario.getContenido() );
-            //TODO falta la foto, no se si aqui se recoge, dejar para luego
 
         }
 
@@ -93,7 +92,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
                    }
                    diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
                    diaDiario.setResumen(etResumenBreve.getText().toString());
-                   // diaDiario.setFotoUri(); //TODO mirar esto más adelante, sera lo de las caritas que se sacara con el metodo de resumen
+                   // diaDiario.setFotoUri();
 
                    iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
 

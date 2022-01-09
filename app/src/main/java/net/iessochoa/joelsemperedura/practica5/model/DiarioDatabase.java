@@ -105,6 +105,12 @@ public abstract class DiarioDatabase extends RoomDatabase {
                                     "Cras vehicula lobortis ante, vel hendrerit diam convallis at. Nullam egestas vel dui sed tincidunt. " +
                                     "In placerat ac mauris eu faucibus. Nullam eu pretium justo. Suspendisse in leo nisi. Nulla hendrerit erat a finibus egestas. Nulla et libero eu purus euismod maximus.");
                     mDao.insert(diaDiario);
+                    //6
+                    diaDiario = new DiaDiario(formatoDelTexto.parse("18-3-2021"), 8, "Ya termino con esto",
+                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam rutrum lectus vestibulum, consectetur urna vel, rutrum tortor. Phasellus at leo nibh. Pellentesque lacinia blandit dui eu aliquam. Cras et suscipit nibh. " +
+                                    "Cras vehicula lobortis ante, vel hendrerit diam convallis at. Nullam egestas vel dui sed tincidunt. " +
+                                    "In placerat ac mauris eu faucibus. Nullam eu pretium justo. Suspendisse in leo nisi. Nulla hendrerit erat a finibus egestas. Nulla et libero eu purus euismod maximus.");
+                    mDao.insert(diaDiario);
 
                 }catch (ParseException e){
                     e.printStackTrace();
