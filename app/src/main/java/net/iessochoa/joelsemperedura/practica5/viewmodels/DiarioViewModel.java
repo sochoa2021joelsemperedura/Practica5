@@ -15,6 +15,8 @@ import net.iessochoa.joelsemperedura.practica5.repository.DiarioRepository;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 public class DiarioViewModel extends AndroidViewModel {
     //Opciones para ordenar
     public static final String POR_FECHA = DiaDiario.FECHA;
@@ -101,6 +103,15 @@ public class DiarioViewModel extends AndroidViewModel {
         mRepository.delete(diaDiario);
     }
     public void update(DiaDiario diaDiario){ mRepository.update(diaDiario); }
+
+    /*
+    rxJava: Este método nos permite recuperar el total de contactos con un observable de la
+    libreria RXJava. La clase Single nos permite una única observación, es suficiente para una consulta
+    única como es nuestro caso
+     */
+    public Single<Float> getMediaValoracionDias(){
+        return mRepository.getValoracionMediaTotal();
+    }
 
     /**
      * Nos permite asignar el orden actual de la lista

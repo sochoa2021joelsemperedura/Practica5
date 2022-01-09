@@ -48,6 +48,7 @@ public class DiarioRepository {
         mAllDiarios=mDiarioDao.getDiarioOrderBy(resumen);
         return mAllDiarios;
     }
+
     //Devuelve valoracion media de los dias
     public Single<Float>getValoracionMediaTotal(){
         return mDiarioDao.getValoracionTotal();
