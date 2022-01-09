@@ -24,10 +24,16 @@
         <item>9</item>
         <item>10</item>
     </string-array>
+    <string-array name="action_ordenar">
+        <item>Fecha</item>
+        <item>Valoración</item>
+        <item>Resumen</item>
+    </string-array>
     <string name="stAlerta">Alerta</string>
     <string name="stMensajeAlertDialog">Es necesario rellenar todos los campos</string>
     <string name="stNuevaTarea">Nueva Tarea</string>
     <string name="stTarea">Tarea</string>
     <string name="stAviso">Aviso</string>
     <string name="stAvisoMensaje">Realmente desea eliminar la tarea con id</string>
+    <string name="stDialogo"><![CDATA[ Práctica 5\nV 1.0\nJoel Sempere Durá\nLicencia cc\n(Creative Commons)]]></string>
 </resources>

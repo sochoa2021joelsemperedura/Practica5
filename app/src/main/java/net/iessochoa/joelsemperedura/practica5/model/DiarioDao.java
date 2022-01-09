@@ -37,4 +37,11 @@ public interface DiarioDao {
     @Query("SELECT AVG("+DiaDiario.VALORACION_DIA+") FROM "+DiaDiario.TABLE_NAME)
     Single<Float>getValoracionTotal(); //Nos devuelve el AVG de la valoracion de todos los dias en un objeto observable(rxJava).Aun por ver
 
+    //ORDENADO POR:
+    @Query("SELECT * FROM "+DiaDiario.TABLE_NAME +" ORDER BY "+DiaDiario.FECHA)
+    LiveData<List<DiaDiario>> getDiariosOrdenadoPorFecha();
+    @Query("SELECT * FROM "+DiaDiario.TABLE_NAME +" ORDER BY "+DiaDiario.VALORACION_DIA)
+    LiveData<List<DiaDiario>> getDiariosOrdenadoPorValoracion();
+    @Query("SELECT * FROM "+DiaDiario.TABLE_NAME +" ORDER BY "+DiaDiario.RESUMEN)
+    LiveData<List<DiaDiario>> getDiariosOrdenadoPorResumen();
 }

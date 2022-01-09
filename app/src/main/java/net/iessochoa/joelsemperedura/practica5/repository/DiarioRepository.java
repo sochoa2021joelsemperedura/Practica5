@@ -43,7 +43,7 @@ public class DiarioRepository {
     public LiveData<List<DiaDiario>> getAllDiarios() {
         return mAllDiarios;
     }
-    //Devuelve ordenado por resumen
+    //Devuelve coincidencias en el resumen
     public LiveData<List<DiaDiario>> getOrderBy(String resumen) {
         mAllDiarios=mDiarioDao.getDiarioOrderBy(resumen);
         return mAllDiarios;
@@ -77,6 +77,19 @@ public class DiarioRepository {
             mDiarioDao.update(diaDiario);
         });
     }
-    //TODO deleteAll
+
+    //Lista ordenada por diferentes columnas
+    public LiveData<List<DiaDiario>>getDiariosOrderByFecha(){
+        mAllDiarios=mDiarioDao.getDiariosOrdenadoPorFecha();
+        return mAllDiarios;
+    }
+    public LiveData<List<DiaDiario>>getDiariosOrderByValoracion(){
+        mAllDiarios=mDiarioDao.getDiariosOrdenadoPorValoracion();
+        return mAllDiarios;
+    }
+    public LiveData<List<DiaDiario>>getDiariosOrderByResumen(){
+        mAllDiarios=mDiarioDao.getDiariosOrdenadoPorResumen();
+        return mAllDiarios;
+    }
 
 }

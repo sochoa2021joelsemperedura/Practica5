@@ -1,22 +1,29 @@
 package net.iessochoa.joelsemperedura.practica5.ui;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Dialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -24,6 +31,7 @@ import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
 import net.iessochoa.joelsemperedura.practica5.viewmodels.DiarioViewModel;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabAnyadir;
     Toolbar toolbar;
     private SearchView svBusqueda;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,13 +116,66 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
+
     }
+
+
+
     //*************************MENU****************************//
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menu_main,menu);
         return true;
     }
+    //*************************Opciones de los items del menu****************************//
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            //Ordenar
+            case R.id.action_ordenar:
+                //Abrir un dialogo
+               // alertSimpleListView();
+                // ********DIALOGO*********//
+                final CharSequence[] items = getResources().getStringArray(R.array.action_ordenar);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle(getResources().getString(R.string.stOrdenar));
+                builder.setItems(items, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch (item){
+                            case 0:
+                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_FECHA);
+                                break;
+                            case 1:
+                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_VALORACION);
+                                break;
+                            case 2:
+                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_RESUMEN);
+                                break;
+                        }
+                        dialog.dismiss();
+
+                    }
+                }).show();
+                return true;
+
+                //Acerca de
+            case R.id.action_about:
+                FragmentManager fg = getSupportFragmentManager();
+                DialogoAlerta dialogo = new DialogoAlerta();
+                dialogo.show(fg,getString(R.string.stAcercaDe));
+                return true;
+
+                //Media valoracion vida
+            case R.id.action_valoraVida:
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     //*************************VIEWS****************************//
     public void iniciaViews(){
         fabAnyadir = findViewById(R.id.fabAnyadir);
@@ -151,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
         });
         dialogo.show();
     }
+
+
 
     //*************************OPCIONES**ITEMS**MENU****************************//
     @Override
