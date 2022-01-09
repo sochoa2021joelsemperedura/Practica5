@@ -92,6 +92,8 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
         private ConstraintLayout clItem;
         private CardView cvItem;
 
+
+
         public DiarioViewHolder(@NonNull View itemView) {
             super(itemView);
             iniciaViews();
@@ -118,6 +120,14 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
             });
 
 
+
+
+        }
+
+        //Practica 5 p2 - Punto 37
+        public DiaDiario getDia(){ //nos devuelve el dia que muestra
+            return mDiarios.get(DiarioViewHolder.this
+                    .getBindingAdapterPosition());
         }
 
         private void iniciaViews() {

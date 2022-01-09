@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView svBusqueda;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +81,38 @@ public class MainActivity extends AppCompatActivity {
         else
             rvLista.setLayoutManager(new GridLayoutManager(this, 2));//2 es el num columnas
 
+        //Evento swiper y manejo
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |
+                        ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        //realizamos un cast del viewHolder y obtenemos el dia borrar
+                        DiaDiario diaDelete=((DiarioListAdapter.DiarioViewHolder)viewHolder).getDia();
+                        borrarDia(diaDelete);
 
-        //Recuperacion o creacion del viewModel
+                        //Si cambia borra, si se le da a cancelar vuelve a dibujar
+                        adapter.notifyDataSetChanged();
+
+                        //final int posicion=viewHolder.getBindingAdapterPosition();
+                        //adapter.notifyItemChanged(posicion);
+
+                    }
+
+                };
+
+        //Creamos el objeto de ItemTouchHelper que se encargará del trabajo
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(simpleItemTouchCallback);
+        //lo asociamos a nuestro reciclerView
+        itemTouchHelper.attachToRecyclerView(rvLista);
+
+
+    //Recuperacion o creacion del viewModel
         diarioViewModel = new ViewModelProvider(this).get(DiarioViewModel.class);
         //Observer
         diarioViewModel.getAllDiarios().observe(this, new Observer<List<DiaDiario>>() {
@@ -270,6 +302,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //en caso de cancel nada
+
             }
         });
         dialogo.show();
