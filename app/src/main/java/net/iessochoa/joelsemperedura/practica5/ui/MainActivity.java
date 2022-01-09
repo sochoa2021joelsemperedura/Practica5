@@ -3,6 +3,7 @@ package net.iessochoa.joelsemperedura.practica5.ui;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -33,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
     // nos permite mantener los datos cuando se reconstruye la actividad
     private DiarioViewModel diarioViewModel;
 
-
     FloatingActionButton fabAnyadir;
     Toolbar toolbar;
+    private SearchView svBusqueda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,26 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent,OPTION_REQUEST_MODIFICAR);
             }
         });
+        //Buscar diaDiarios
+        //Asignar el observer a la busqueda hecha. si hay cambiaos actualizar adaptador
+        diarioViewModel.getByResumen().observe(this, diaDiarios -> adapter.setDiarios(diaDiarios));
+        //Cuando cambie el campo de busqueda, transformation.switchMap cambiara la condicion de busqueda del livedata
+        svBusqueda.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //Cuando el usuario pulsa intro enviamos la nueva consulta
+                diarioViewModel.setCondicionBusqueda(query);
+                return true;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //comprobamos si el tamaño es cero porque el searchview no responde al intro cuando no hay texto
+                if (newText.length() == 0)
+                    diarioViewModel.setCondicionBusqueda("");
+                return false;
+            }
+        });
     }
     //*************************MENU****************************//
     @Override
@@ -99,9 +119,10 @@ public class MainActivity extends AppCompatActivity {
         fabAnyadir = findViewById(R.id.fabAnyadir);
         toolbar = findViewById(R.id.toolbar);
         rvLista = findViewById(R.id.rvLista);
+        svBusqueda = findViewById(R.id.svBusqueda);
     }
 
-    //*************************MANEJO**DATOS****************************//
+    //*************************CRUD****************************//
     private void anyadirDia(DiaDiario diaDiario){
         diarioViewModel.insert(diaDiario);
     }
