@@ -65,7 +65,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
 
 
             spValoracion.setSelection(adaptadorValoracion.getPosition(String.valueOf(diaDiario.getValoracionDia()))); //valoracion del objeto
-            tvFecha.setText( diaDiario.getFecha().toString() ); //Revisar si captura la fecha como string
+            tvFecha.setText( DiaDiario.getFechaEstaticaFormatoLocal(diaDiario.getFecha()) ); //Revisar si captura la fecha como string
             etResumenBreve.setText( diaDiario.getResumen() );
             etDiarioTexto.setText( diaDiario.getContenido() );
 
