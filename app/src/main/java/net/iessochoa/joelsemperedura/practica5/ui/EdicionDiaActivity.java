@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -14,25 +16,18 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
 
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class EdicionDiaActivity extends AppCompatActivity {
     public static String EXTRA_EDICION_DIA = "EdicionDiaActivity.diaDiario"; // el objeto diaDiario que llega
 
     DiaDiario diaDiario;
     Intent iBack; //Devolver a la actividad principal el intent
-    Date newFecha; ///guardar la fecha fuera del OnClickFecha
 
     Spinner spValoracion;
     Button btnFecha;
@@ -80,23 +75,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
         //Operaciones realizadas al pulsar el boton guardar
         btnGuardar.setOnClickListener(e->{
             if (compruebaCampos()){
-               if (diaDiario == null){ //si es un dia nuevo
-                    iBack.putExtra(EXTRA_EDICION_DIA,new DiaDiario(
-                            newFecha,Integer.parseInt(spValoracion.getSelectedItem().toString()),
-                            etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
-                }else{ //si ya existe
-                   diaDiario.setContenido(etDiarioTexto.getText().toString());
-                   //asi me quito un error
-                   if (newFecha != null){
-                       diaDiario.setFecha(newFecha);
-                   }
-                   diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
-                   diaDiario.setResumen(etResumenBreve.getText().toString());
-                   // diaDiario.setFotoUri();
-
-                   iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
-
-                }
+                guardarDia();
                 setResult(RESULT_OK,iBack);
                 finish();
             } else{
@@ -106,6 +85,44 @@ public class EdicionDiaActivity extends AppCompatActivity {
 
 
     }
+    //*********VERIFICA SI ES UN DIA NUEVO O NO Y LO GUARDA COMO DIADIARIO*************//
+    private void guardarDia() {
+        if (diaDiario == null){ //si es un dia nuevo
+             iBack.putExtra(EXTRA_EDICION_DIA,new DiaDiario(
+                     diaDiario.getFecha(),Integer.parseInt(spValoracion.getSelectedItem().toString()),
+                     etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
+         }else{ //si ya existe
+            diaDiario.setContenido(etDiarioTexto.getText().toString());
+            //asi me quito un error
+            if (diaDiario.getFecha() != null){
+                diaDiario.setFecha(diaDiario.getFecha());
+            }
+            diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
+            diaDiario.setResumen(etResumenBreve.getText().toString());
+            // diaDiario.setFotoUri();
+
+            iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
+
+         }
+        //Guardar las preferencias del dia antes de salir
+        guardarDiaPreferencias(diaDiario.getFecha());
+
+    }
+    //*************GUARDA LA FECHA DE EL DIADIARIO AL QUE SE REFIERE EN EL FICHERO DE PREFERENCIAS*********//
+    private void guardarDiaPreferencias(Date fecha){
+        //buscamos el fichero de preferencias
+        SharedPreferences sharedPref =
+                this.getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE);
+        //lo abrimos en modo edición
+        SharedPreferences.Editor editor = sharedPref.edit();
+        //guardamos la fecha del día como entero
+        editor.putLong(getString(R.string.pref_key_ultimo_dia),
+                fecha.getTime());
+        //finalizamos
+        editor.commit();
+    }
+
+
     // en caso de faltar algun campo por rellener abre un dialogo
     private void abrirDialogo() {
         new AlertDialog.Builder(this)
@@ -154,10 +171,10 @@ public class EdicionDiaActivity extends AppCompatActivity {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear, dayOfMonth);
                         Date fecha=calendar.getTime();
+                        diaDiario.setFecha(fecha);
 
                         //Asignacion de la fecha seleccionada en el dialogo al textView
                         tvFecha.setText(DiaDiario.getFechaEstaticaFormatoLocal(fecha));
-                        newFecha = fecha;
                     }
                 }, newCalendar.get(Calendar.YEAR),
                 newCalendar.get(Calendar.MONTH),

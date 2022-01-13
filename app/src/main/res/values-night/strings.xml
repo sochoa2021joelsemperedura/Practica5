@@ -35,5 +35,7 @@
     <string name="stTarea">Tarea</string>
     <string name="stAviso">Aviso</string>
     <string name="stAvisoMensaje">Realmente desea eliminar la tarea con id</string>
+    <string name="preference_file">preferencias</string>
+    <string name="pref_key_ultimo_dia">pref_ultimo_dia</string>
     <string name="stDialogo"><![CDATA[ Práctica 4\nV 1.0\nJoel Sempere Durá\nLicencia cc\n(Creative Commons)]]></string>
 </resources>
