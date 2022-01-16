@@ -36,6 +36,8 @@ public class EdicionDiaActivity extends AppCompatActivity {
     EditText etResumenBreve;
     EditText etDiarioTexto;
 
+    Date newFecha;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,9 +89,12 @@ public class EdicionDiaActivity extends AppCompatActivity {
     }
     //*********VERIFICA SI ES UN DIA NUEVO O NO Y LO GUARDA COMO DIADIARIO*************//
     private void guardarDia() {
-        if (diaDiario == null){ //si es un dia nuevo
+        if (diaDiario == null){
+            //Guardar las preferencias del dia antes de salir
+            guardarDiaPreferencias(newFecha);
+            //si es un dia nuevo
              iBack.putExtra(EXTRA_EDICION_DIA,new DiaDiario(
-                     diaDiario.getFecha(),Integer.parseInt(spValoracion.getSelectedItem().toString()),
+                     newFecha,Integer.parseInt(spValoracion.getSelectedItem().toString()),
                      etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
          }else{ //si ya existe
             diaDiario.setContenido(etDiarioTexto.getText().toString());
@@ -100,12 +105,11 @@ public class EdicionDiaActivity extends AppCompatActivity {
             diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
             diaDiario.setResumen(etResumenBreve.getText().toString());
             // diaDiario.setFotoUri();
-
+            //Guardar las preferencias del dia antes de salir
+            guardarDiaPreferencias(diaDiario.getFecha());
             iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
-
          }
-        //Guardar las preferencias del dia antes de salir
-        guardarDiaPreferencias(diaDiario.getFecha());
+
 
     }
     //*************GUARDA LA FECHA DE EL DIADIARIO AL QUE SE REFIERE EN EL FICHERO DE PREFERENCIAS*********//
@@ -171,7 +175,12 @@ public class EdicionDiaActivity extends AppCompatActivity {
                         Calendar calendar = Calendar.getInstance();
                         calendar.set(year, monthOfYear, dayOfMonth);
                         Date fecha=calendar.getTime();
-                        diaDiario.setFecha(fecha);
+                        if (diaDiario == null){
+                            newFecha = fecha;
+                        }else{
+                            diaDiario.setFecha(fecha);
+                        }
+
 
                         //Asignacion de la fecha seleccionada en el dialogo al textView
                         tvFecha.setText(DiaDiario.getFechaEstaticaFormatoLocal(fecha));

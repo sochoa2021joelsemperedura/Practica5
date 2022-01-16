@@ -16,20 +16,13 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
-import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -37,10 +30,8 @@ import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
 import net.iessochoa.joelsemperedura.practica5.viewmodels.DiarioViewModel;
 
-import java.util.Arrays;
 import java.util.List;
 
-import io.reactivex.Scheduler;
 import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -184,30 +175,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             //Ordenar
             case R.id.action_ordenar:
-                //Abrir un dialogo
-               // alertSimpleListView();
-                // ********DIALOGO*********//
-                final CharSequence[] items = getResources().getStringArray(R.array.action_ordenar);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                builder.setTitle(getResources().getString(R.string.stOrdenar));
-                builder.setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        switch (item){
-                            case 0:
-                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_FECHA);
-                                break;
-                            case 1:
-                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_VALORACION);
-                                break;
-                            case 2:
-                                diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_RESUMEN);
-                                break;
-                        }
-                        dialog.dismiss();
-
-                    }
-                }).show();
+                ordenarDiaDiarios();
                 return true;
 
                 //Acerca de
@@ -219,54 +187,84 @@ public class MainActivity extends AppCompatActivity {
 
                 //Media valoracion vida
             case R.id.action_valoraVida:
-                diarioViewModel.getMediaValoracionDias() //Obtenemos el objeto reactivo de un solo uso para la consulta en segundo plano en un hilo
-                .subscribeOn(Schedulers.io())//el observable(la consulta sql) se ejecuta en uno diferente
-                .observeOn(AndroidSchedulers.mainThread()) //indicamos que el observador es el hilo principal  de Android
-                .subscribe(new SingleObserver<Float>() { //Creamos el observador
-                    @Override
-                    public void onSubscribe(@NonNull Disposable disposable) {
-
-                    }
-
-                    @Override //cuando termine  la consulta de la base de datos recibimos el valor
-                    public void onSuccess(@NonNull Float aFloat) {
-                       int resultado = Math.round(aFloat); //redondeo el valor recibido
-                       ImageView imagen = new ImageView(MainActivity.this);
-
-                       switch(getValoracionEstaticaResumida(resultado)){ //se lo paso a un metodo estatico del pojo
-                           case 1:
-                               imagen.setImageResource(R.drawable.ic_gr_sad); //segun devolucion asigno un drawable
-                               break;
-                           case 2:
-                               imagen.setImageResource(R.drawable.ic_gr_neu);
-                               break;
-                           case 3:
-                               imagen.setImageResource(R.drawable.ic_gr_smi);
-                               break;
-                       }
-                        //Dialogo con imagen
-                        AlertDialog.Builder builder =
-                                new AlertDialog.Builder(MainActivity.this).
-                                        setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .setView(imagen);
-                        builder.create().show();
-
-
-                    }
-
-                    @Override
-                    public void onError(@NonNull Throwable throwable) {
-
-                    }
-                });
+                imgMediaValoracionVida();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    //********METODO QUE NOS DEVUELVE LA IMAGEN DE LA MEDIA DE LOS DIADIARIOS******//
+    private void imgMediaValoracionVida() {
+        diarioViewModel.getMediaValoracionDias() //Obtenemos el objeto reactivo de un solo uso para la consulta en segundo plano en un hilo
+        .subscribeOn(Schedulers.io())//el observable(la consulta sql) se ejecuta en uno diferente
+        .observeOn(AndroidSchedulers.mainThread()) //indicamos que el observador es el hilo principal  de Android
+        .subscribe(new SingleObserver<Float>() { //Creamos el observador
+            @Override
+            public void onSubscribe(@NonNull Disposable disposable) {
+
+            }
+            @Override //cuando termine  la consulta de la base de datos recibimos el valor
+            public void onSuccess(@NonNull Float aFloat) {
+               int resultado = Math.round(aFloat); //redondeo el valor recibido
+               ImageView imagen = new ImageView(MainActivity.this);
+               switch(getValoracionEstaticaResumida(resultado)){ //se lo paso a un metodo estatico del pojo
+                   case 1:
+                       imagen.setImageResource(R.drawable.ic_gr_sad); //segun devolucion asigno un drawable
+                       break;
+                   case 2:
+                       imagen.setImageResource(R.drawable.ic_gr_neu);
+                       break;
+                   case 3:
+                       imagen.setImageResource(R.drawable.ic_gr_smi);
+                       break;
+               }
+                //Dialogo con imagen
+                AlertDialog.Builder builder =
+                        new AlertDialog.Builder(MainActivity.this).
+                                setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setView(imagen);
+                builder.create().show();
+
+
+            }
+
+            @Override
+            public void onError(@NonNull Throwable throwable) {
+
+            }
+        });
+    }
+
+    private void ordenarDiaDiarios() {
+        //Abrir un dialogo
+        // alertSimpleListView();
+        // ********DIALOGO*********//
+        final CharSequence[] items = getResources().getStringArray(R.array.action_ordenar);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getResources().getString(R.string.stOrdenar));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item){
+                    case 0:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_FECHA);
+                        break;
+                    case 1:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_VALORACION);
+                        break;
+                    case 2:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_RESUMEN);
+                        break;
+                }
+                dialog.dismiss();
+
+            }
+        }).show();
     }
 
     //*************************VIEWS****************************//
