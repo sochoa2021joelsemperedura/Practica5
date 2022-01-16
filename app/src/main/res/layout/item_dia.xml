@@ -4,21 +4,21 @@
     android:id="@+id/cvItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="?attr/colorSecondaryVariant"
-    card_view:cardCornerRadius="16dp"
-    card_view:cardElevation="4dp"
+    card_view:cardBackgroundColor="@color/purple_500"
+    card_view:cardCornerRadius="14dp"
+    card_view:cardElevation="0dp"
     card_view:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clItem"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/ivBorrarItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             card_view:layout_constraintBottom_toBottomOf="@+id/ivValoracionItem"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintTop_toTopOf="@+id/ivValoracionItem"
@@ -28,9 +28,9 @@
             android:id="@+id/ivValoracionItem"
             android:layout_width="40dp"
             android:layout_height="53dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
             card_view:layout_constraintTop_toTopOf="parent"
@@ -40,8 +40,8 @@
             android:id="@+id/tvResumenItem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             android:textStyle="bold"
             card_view:layout_constraintBottom_toBottomOf="@+id/ivValoracionItem"
             card_view:layout_constraintEnd_toStartOf="@+id/ivBorrarItem"

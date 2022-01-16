@@ -45,22 +45,21 @@
 
         <TextView
             android:id="@+id/tvFecha"
-            android:layout_width="75dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="64dp"
-            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="72dp"
             app:layout_constraintEnd_toStartOf="@+id/btnFecha"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="14/10/2018" />
 
         <Button
             android:id="@+id/btnFecha"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
             android:backgroundTint="#00FFFFFF"
             app:icon="@android:drawable/ic_menu_month"
             app:iconTint="@color/black"
@@ -74,15 +73,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="@string/stTextoHintResumenBreve"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnFecha"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnFecha"
-            app:layout_constraintTop_toTopOf="@+id/btnFecha" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnFecha" />
 
         <Spinner
             android:id="@+id/spValoracion"
@@ -97,18 +96,18 @@
             android:id="@+id/tvValoraVida"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             android:text="@string/stValorarVida"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnFecha" />
+            app:layout_constraintTop_toBottomOf="@+id/etResumenBreve" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
