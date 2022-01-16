@@ -16,13 +16,16 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -30,6 +33,7 @@ import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
 import net.iessochoa.joelsemperedura.practica5.viewmodels.DiarioViewModel;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.SingleObserver;
@@ -40,38 +44,29 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     public static final int OPTION_REQUEST_NUEVA = 0; //nuevo día
     public static final int OPTION_REQUEST_MODIFICAR = 1; //modificar día
-
     RecyclerView rvLista;
     // nos permite mantener los datos cuando se reconstruye la actividad
     private DiarioViewModel diarioViewModel;
-
     FloatingActionButton fabAnyadir;
     Toolbar toolbar;
     private SearchView svBusqueda;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         //inicia las views
         iniciaViews();
         //Asignar Toolbar a la actividad
         setSupportActionBar(toolbar);
-
         //***establece el layout del reclyclerView y le añade el adapter***//
         final DiarioListAdapter adapter = new DiarioListAdapter(this);
         rvLista.setAdapter(adapter);
-
         //Dos formas de visualizacion del RecyclerView segun su orientacion
         int orientation = getResources().getConfiguration().orientation;
         if(orientation== Configuration.ORIENTATION_PORTRAIT)//una fila
             rvLista.setLayoutManager(new LinearLayoutManager(this));
         else
             rvLista.setLayoutManager(new GridLayoutManager(this, 2));//2 es el num columnas
-
         //Evento swiper y manejo
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new
                 ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |
@@ -91,9 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
                         //final int posicion=viewHolder.getBindingAdapterPosition();
                         //adapter.notifyItemChanged(posicion);
-
                     }
-
                 };
 
         //Creamos el objeto de ItemTouchHelper que se encargará del trabajo
@@ -156,13 +149,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
-
     }
-
-
-
     //*************************MENU****************************//
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -177,94 +164,28 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_ordenar:
                 ordenarDiaDiarios();
                 return true;
-
                 //Acerca de
             case R.id.action_about:
                 FragmentManager fg = getSupportFragmentManager();
                 DialogoAlerta dialogo = new DialogoAlerta();
                 dialogo.show(fg,getString(R.string.stAcercaDe));
                 return true;
-
                 //Media valoracion vida
             case R.id.action_valoraVida:
                 imgMediaValoracionVida();
+                return true;
+                //Muestra ultimo dia guardado
+            case R.id.action_lastDay:
+                    muestraUltimoDia();
+                return true;
+                //Ir a PreferenciasActivity
+            case R.id.action_setting:
+                Intent intent = new Intent(this,PreferenciasActivity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    //********METODO QUE NOS DEVUELVE LA IMAGEN DE LA MEDIA DE LOS DIADIARIOS******//
-    private void imgMediaValoracionVida() {
-        diarioViewModel.getMediaValoracionDias() //Obtenemos el objeto reactivo de un solo uso para la consulta en segundo plano en un hilo
-        .subscribeOn(Schedulers.io())//el observable(la consulta sql) se ejecuta en uno diferente
-        .observeOn(AndroidSchedulers.mainThread()) //indicamos que el observador es el hilo principal  de Android
-        .subscribe(new SingleObserver<Float>() { //Creamos el observador
-            @Override
-            public void onSubscribe(@NonNull Disposable disposable) {
-
-            }
-            @Override //cuando termine  la consulta de la base de datos recibimos el valor
-            public void onSuccess(@NonNull Float aFloat) {
-               int resultado = Math.round(aFloat); //redondeo el valor recibido
-               ImageView imagen = new ImageView(MainActivity.this);
-               switch(getValoracionEstaticaResumida(resultado)){ //se lo paso a un metodo estatico del pojo
-                   case 1:
-                       imagen.setImageResource(R.drawable.ic_gr_sad); //segun devolucion asigno un drawable
-                       break;
-                   case 2:
-                       imagen.setImageResource(R.drawable.ic_gr_neu);
-                       break;
-                   case 3:
-                       imagen.setImageResource(R.drawable.ic_gr_smi);
-                       break;
-               }
-                //Dialogo con imagen
-                AlertDialog.Builder builder =
-                        new AlertDialog.Builder(MainActivity.this).
-                                setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                })
-                                .setView(imagen);
-                builder.create().show();
-
-
-            }
-
-            @Override
-            public void onError(@NonNull Throwable throwable) {
-
-            }
-        });
-    }
-
-    private void ordenarDiaDiarios() {
-        //Abrir un dialogo
-        // alertSimpleListView();
-        // ********DIALOGO*********//
-        final CharSequence[] items = getResources().getStringArray(R.array.action_ordenar);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle(getResources().getString(R.string.stOrdenar));
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                switch (item){
-                    case 0:
-                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_FECHA);
-                        break;
-                    case 1:
-                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_VALORACION);
-                        break;
-                    case 2:
-                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_RESUMEN);
-                        break;
-                }
-                dialog.dismiss();
-
-            }
-        }).show();
     }
 
     //*************************VIEWS****************************//
@@ -324,5 +245,86 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+    //TODO : Punto 8 Practica 5 parte 3 OPCIONAL HACER
+    //Muestra ultimo dia guardado
+    private void muestraUltimoDia() {
+        //recuperamos las preferencias
+        SharedPreferences sharedPref = this.getSharedPreferences(
+                getString(R.string.preference_file),Context.MODE_PRIVATE);
+        //recuperamos la fecha del últimos día editado
+        long ultimoDia=sharedPref.getLong(getString(R.string.pref_key_ultimo_dia),0);
+        //mostramos el resultado
+        Toast.makeText(this,getString(R.string.stUltimoDia)+" "+DiaDiario.getFechaEstaticaFormatoLocal(new Date(ultimoDia)),Toast.LENGTH_LONG).show();
+    }
+
+    //********METODO QUE NOS DEVUELVE LA IMAGEN DE LA MEDIA DE LOS DIADIARIOS******//
+    private void imgMediaValoracionVida() {
+        diarioViewModel.getMediaValoracionDias() //Obtenemos el objeto reactivo de un solo uso para la consulta en segundo plano en un hilo
+                .subscribeOn(Schedulers.io())//el observable(la consulta sql) se ejecuta en uno diferente
+                .observeOn(AndroidSchedulers.mainThread()) //indicamos que el observador es el hilo principal  de Android
+                .subscribe(new SingleObserver<Float>() { //Creamos el observador
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+
+                    }
+                    @Override //cuando termine  la consulta de la base de datos recibimos el valor
+                    public void onSuccess(@NonNull Float aFloat) {
+                        int resultado = Math.round(aFloat); //redondeo el valor recibido
+                        ImageView imagen = new ImageView(MainActivity.this);
+                        switch(getValoracionEstaticaResumida(resultado)){ //se lo paso a un metodo estatico del pojo
+                            case 1:
+                                imagen.setImageResource(R.drawable.ic_gr_sad); //segun devolucion asigno un drawable
+                                break;
+                            case 2:
+                                imagen.setImageResource(R.drawable.ic_gr_neu);
+                                break;
+                            case 3:
+                                imagen.setImageResource(R.drawable.ic_gr_smi);
+                                break;
+                        }
+                        //Dialogo con imagen
+                        AlertDialog.Builder builder =
+                                new AlertDialog.Builder(MainActivity.this).
+                                        setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                dialog.dismiss();
+                                            }
+                                        })
+                                        .setView(imagen);
+                        builder.create().show();
+                    }
+                    @Override
+                    public void onError(@NonNull Throwable throwable) {
+
+                    }
+                });
+    }
+    private void ordenarDiaDiarios() {
+        //Abrir un dialogo
+        // alertSimpleListView();
+        // ********DIALOGO*********//
+        final CharSequence[] items = getResources().getStringArray(R.array.action_ordenar);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getResources().getString(R.string.stOrdenar));
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                switch (item){
+                    case 0:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_FECHA);
+                        break;
+                    case 1:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_VALORACION);
+                        break;
+                    case 2:
+                        diarioViewModel.setOrdenadoPor(DiarioViewModel.POR_RESUMEN);
+                        break;
+                }
+                dialog.dismiss();
+
+            }
+        }).show();
     }
 }

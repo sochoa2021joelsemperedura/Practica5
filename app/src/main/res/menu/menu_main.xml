@@ -14,6 +14,9 @@
         android:id="@+id/action_fechas"
         android:title="@string/stMostrarEntreFechas" />
     <item
+        android:id="@+id/action_lastDay"
+        android:title="@string/stUltimoDia" />
+    <item
         android:id="@+id/action_setting"
         android:title="@string/stConfigurar" />
     <item

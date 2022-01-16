@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica5.NoActionBar">
         <activity
+            android:name=".ui.PreferenciasActivity"
+            android:exported="false"
+            android:label="@string/title_activity_preferencias" />
+        <activity
             android:name=".ui.EdicionDiaActivity"
             android:exported="true" />
         <activity

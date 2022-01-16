@@ -38,4 +38,13 @@
     <string name="preference_file">preferencias</string>
     <string name="pref_key_ultimo_dia">pref_ultimo_dia</string>
     <string name="stDialogo"><![CDATA[ Práctica 4\nV 1.0\nJoel Sempere Durá\nLicencia cc\n(Creative Commons)]]></string>
+    <string name="stUltimoDia">Último Día</string>
+
+
+    <string name="stDatosPersonales">Datos Personales</string>
+    <string name="stConfPrograma">Configuración Programa</string>
+    <string name="stPreguntaNombre">Cuál es tu nombre</string>
+    <string name="stFechaCumple">Fecha Cumpleaños</string>
+    <string name="stComoTeLlamamos">Con que nombre quieres que nos dirijamos a ti</string>
+    <string name="stPreguntaGenero">Eres...</string>
 </resources>
