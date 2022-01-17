@@ -47,4 +47,6 @@
     <string name="stFechaCumple">Fecha Cumpleaños</string>
     <string name="stComoTeLlamamos">Con que nombre quieres que nos dirijamos a ti</string>
     <string name="stPreguntaGenero">Eres...</string>
+    <string name="stAvisarEscribir">Avisar escribir en Diario</string>
+    <string name="stAvisarEscribirDescripcion">Desea que le avisemos que tiene que escribir en el diario</string>
 </resources>

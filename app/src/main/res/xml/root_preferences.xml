@@ -27,5 +27,11 @@
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/stConfPrograma"/>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@android:drawable/ic_popup_reminder"
+        android:key="avisar"
+        android:summary="@string/stAvisarEscribirDescripcion"
+        android:title="@string/stAvisarEscribir" />
 
 </PreferenceScreen>

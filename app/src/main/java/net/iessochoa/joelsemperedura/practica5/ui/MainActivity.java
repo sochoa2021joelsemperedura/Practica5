@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -150,6 +152,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false); //TODO : Prguntar como recuperar los valores del settings
+        //Si la pantalla es grande establece una configuracion diferente
+        opcionesPantallaXL();
+
+
+
+
+    }
+
+    //**********Averiguar tamaño pantalla*****************//
+    private void opcionesPantallaXL() {
+        int pantalla = (getResources().getConfiguration().screenLayout &
+                Configuration.SCREENLAYOUT_SIZE_MASK);
+        if ( (pantalla ==
+                Configuration.SCREENLAYOUT_SIZE_LARGE) ||
+                pantalla == Configuration.SCREENLAYOUT_SIZE_XLARGE ){
+
+                    setTitle("Probando"); //TODO Obtener usuario establecido en la configuracion
+        }
+    }
+
     //*************************MENU****************************//
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
