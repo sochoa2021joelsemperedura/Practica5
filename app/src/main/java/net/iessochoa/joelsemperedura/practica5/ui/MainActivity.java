@@ -11,7 +11,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.EditTextPreference;
+import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     FloatingActionButton fabAnyadir;
     Toolbar toolbar;
     private SearchView svBusqueda;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
         iniciaViews();
         //Asignar Toolbar a la actividad
         setSupportActionBar(toolbar);
+        //Preferencias por defecto
+        PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false);
         //***establece el layout del reclyclerView y le añade el adapter***//
         final DiarioListAdapter adapter = new DiarioListAdapter(this);
         rvLista.setAdapter(adapter);
@@ -157,23 +160,47 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false); //TODO : Prguntar como recuperar los valores del settings
-        //Si la pantalla es grande establece una configuracion diferente
-        opcionesPantallaXL();
+        //Si la pantalla es grande establece un titulo diferente
+        defineTituloApp();
+        //Color segun genero seleccionado
+        leerEstiloGenero();
 
 
 
 
     }
 
+    private void leerEstiloGenero() {
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String genero = sharedPreferences.getString("genero","");
+        int generoValor = Integer.parseInt(genero);
+
+
+       switch (generoValor){
+            case 1:
+                rvLista.setBackground(getDrawable(R.color.hombre));
+                break;
+            case 2:
+                rvLista.setBackground(getDrawable(R.color.mujer));
+                break;
+            case 3:
+                rvLista.setBackground(getDrawable(R.color.otro));
+                break;
+        }
+
+    }
+
+
     //**********Averiguar tamaño pantalla*****************//
-    private void opcionesPantallaXL() {
+    private void defineTituloApp() {
         int pantalla = (getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK);
         if ( (pantalla ==
                 Configuration.SCREENLAYOUT_SIZE_LARGE) ||
                 pantalla == Configuration.SCREENLAYOUT_SIZE_XLARGE ){
-
-                    setTitle("Probando"); //TODO Obtener usuario establecido en la configuracion
+                sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+                String nombreUser = sharedPreferences.getString("nombre","");
+                    setTitle(getString(R.string.app_name)+" - "+nombreUser);
         }
     }
 

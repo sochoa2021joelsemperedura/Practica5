@@ -3,15 +3,15 @@
 
     <PreferenceCategory app:title="@string/stDatosPersonales">
         <EditTextPreference
-            android:defaultValue="true"
+            android:defaultValue="Nombre"
             android:key="nombre"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:summary="@string/stComoTeLlamamos"
             android:title="@string/stPreguntaNombre" />
         <EditTextPreference
-            android:defaultValue="Default value"
-            android:key="cumpleaños"
+            android:defaultValue="28/08/1996"
+            android:key="cumpleanyos"
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:summary="@string/stFechaCumple"
