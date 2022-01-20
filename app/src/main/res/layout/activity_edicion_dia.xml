@@ -70,6 +70,8 @@
             android:layout_height="26dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="72dp"
+            android:layout_marginBottom="21dp"
+            app:layout_constraintBottom_toTopOf="@+id/etResumenBreve"
             app:layout_constraintEnd_toStartOf="@+id/btnFecha"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -98,7 +100,7 @@
             android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="@string/stTextoHintResumenBreve"
-            android:inputType="textPersonName"
+            android:inputType="textMultiLine|textPersonName"
             android:minHeight="48dp"
             app:layout_constraintEnd_toStartOf="@+id/ivImagenDia"
             app:layout_constraintStart_toStartOf="parent"
@@ -147,14 +149,15 @@
 
         <ImageView
             android:id="@+id/ivImagenDia"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_marginTop="72dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/etResumenBreve"
-            app:layout_constraintTop_toTopOf="@+id/btnFecha"
+            app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/avatars" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

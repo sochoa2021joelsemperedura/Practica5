@@ -1,5 +1,6 @@
 package net.iessochoa.joelsemperedura.practica5.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
@@ -201,6 +204,26 @@ public class EdicionDiaActivity extends AppCompatActivity {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(intent.createChooser(intent, getString(R.string.stSeleccioneImagen)), STATUS_CODE_SELECCION_IMAGEN);
+    }
+
+    //Asignar imagen en el metodo
+    private void muestraFoto(){
+        Glide.with(this)
+                .load(uriFoto) // Uri of the picture
+                .into(ivImagenDia);//imageView
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != RESULT_CANCELED){
+            switch (requestCode){
+                case STATUS_CODE_SELECCION_IMAGEN:
+                    uriFoto = data.getData();
+                    muestraFoto();
+                    break;
+            }
+        }
     }
 
 
