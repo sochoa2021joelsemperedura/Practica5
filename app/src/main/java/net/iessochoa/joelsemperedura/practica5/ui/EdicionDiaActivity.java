@@ -8,7 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,6 +28,7 @@ import java.util.Date;
 
 public class EdicionDiaActivity extends AppCompatActivity {
     public static String EXTRA_EDICION_DIA = "EdicionDiaActivity.diaDiario"; // el objeto diaDiario que llega
+    private static final int STATUS_CODE_SELECCION_IMAGEN = 300;
 
     DiaDiario diaDiario;
     Intent iBack; //Devolver a la actividad principal el intent
@@ -40,6 +43,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
     ImageView ivImagenDia;
 
     Date newFecha;
+    private Uri uriFoto = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +90,11 @@ public class EdicionDiaActivity extends AppCompatActivity {
             } else{
                abrirDialogo();
             }
+        });
+
+        //Boton imagen
+        btnImagen.setOnClickListener(e->{
+            elegirGaleria();
         });
 
 
@@ -157,17 +166,6 @@ public class EdicionDiaActivity extends AppCompatActivity {
         return resultado;
     }
 
-    public void iniciaViews(){
-        spValoracion = findViewById(R.id.spValoracion);
-        btnFecha = findViewById(R.id.btnFecha);
-        tvFecha = findViewById(R.id.tvFecha);
-        btnGuardar = findViewById(R.id.btnGuardar);
-        etResumenBreve = findViewById(R.id.etResumenBreve);
-        etDiarioTexto = findViewById(R.id.etDiarioTexto);
-        btnImagen = findViewById(R.id.btnImagen);
-        ivImagenDia = findViewById(R.id.ivImagenDia);
-    }
-
     //Nos abre el click del boton fecha
     public void onClickFecha(){
         Calendar newCalendar = Calendar.getInstance();
@@ -195,6 +193,26 @@ public class EdicionDiaActivity extends AppCompatActivity {
                 newCalendar.get(Calendar.DAY_OF_MONTH));
         dialogo.show();
 
+    }
+
+    //Metodo abrir galeria
+    private void elegirGaleria() {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        startActivityForResult(intent.createChooser(intent, getString(R.string.stSeleccioneImagen)), STATUS_CODE_SELECCION_IMAGEN);
+    }
+
+
+    public void iniciaViews(){
+        spValoracion = findViewById(R.id.spValoracion);
+        btnFecha = findViewById(R.id.btnFecha);
+        tvFecha = findViewById(R.id.tvFecha);
+        btnGuardar = findViewById(R.id.btnGuardar);
+        etResumenBreve = findViewById(R.id.etResumenBreve);
+        etDiarioTexto = findViewById(R.id.etDiarioTexto);
+        btnImagen = findViewById(R.id.btnImagen);
+        ivImagenDia = findViewById(R.id.ivImagenDia);
     }
 
 }
