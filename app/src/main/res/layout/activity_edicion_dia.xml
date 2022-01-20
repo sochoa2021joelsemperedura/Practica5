@@ -31,7 +31,19 @@
                 app:icon="@android:drawable/ic_menu_save"
                 app:iconPadding="0dp" />
 
+            <Button
+                android:id="@+id/btnImagen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:autoText="false"
+                android:layoutDirection="ltr"
+                app:icon="@android:drawable/ic_menu_gallery"
+                app:iconPadding="0dp" />
+
+
         </androidx.appcompat.widget.Toolbar>
+
+
 
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -42,6 +54,15 @@
         android:layout_height="match_parent"
         app:layout_anchor="@+id/constraintLayout"
         app:layout_anchorGravity="center">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="150dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnFecha"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvFecha"
@@ -79,7 +100,7 @@
             android:hint="@string/stTextoHintResumenBreve"
             android:inputType="textPersonName"
             android:minHeight="48dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ivImagenDia"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnFecha" />
 
@@ -122,6 +143,16 @@
                 android:hint="@string/stHintDiario"
                 android:inputType="textMultiLine" />
         </ScrollView>
+
+        <ImageView
+            android:id="@+id/ivImagenDia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnFecha"
+            tools:srcCompat="@tools:sample/avatars" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

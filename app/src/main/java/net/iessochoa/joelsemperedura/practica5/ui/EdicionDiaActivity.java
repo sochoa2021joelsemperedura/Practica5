@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -35,6 +36,8 @@ public class EdicionDiaActivity extends AppCompatActivity {
     Button btnGuardar;
     EditText etResumenBreve;
     EditText etDiarioTexto;
+    Button btnImagen;
+    ImageView ivImagenDia;
 
     Date newFecha;
 
@@ -161,6 +164,8 @@ public class EdicionDiaActivity extends AppCompatActivity {
         btnGuardar = findViewById(R.id.btnGuardar);
         etResumenBreve = findViewById(R.id.etResumenBreve);
         etDiarioTexto = findViewById(R.id.etDiarioTexto);
+        btnImagen = findViewById(R.id.btnImagen);
+        ivImagenDia = findViewById(R.id.ivImagenDia);
     }
 
     //Nos abre el click del boton fecha

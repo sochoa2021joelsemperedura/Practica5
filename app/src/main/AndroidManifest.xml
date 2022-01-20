@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.iessochoa.joelsemperedura.practica5">
 
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <protected-broadcast
+        android:name="android.intent.action.MEDIA_MOUNTED"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_nuevo"
@@ -9,6 +17,7 @@
         android:roundIcon="@mipmap/ic_nuevo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Practica5.NoActionBar">
+
         <activity
             android:name=".ui.PreferenciasActivity"
             android:exported="false"
@@ -25,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>
