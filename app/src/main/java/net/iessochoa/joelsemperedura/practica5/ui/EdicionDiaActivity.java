@@ -1,5 +1,4 @@
 package net.iessochoa.joelsemperedura.practica5.ui;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -75,6 +74,8 @@ public class EdicionDiaActivity extends AppCompatActivity {
             tvFecha.setText( DiaDiario.getFechaEstaticaFormatoLocal(diaDiario.getFecha()) ); //Revisar si captura la fecha como string
             etResumenBreve.setText( diaDiario.getResumen() );
             etDiarioTexto.setText( diaDiario.getContenido() );
+            uriFoto = Uri.parse(diaDiario.getFotoUri()); //uriFoto recibe el uri almacenado en diaDiario
+            muestraFoto(); //se carga en el ImageView gracias al metodo Glide
 
         }
 
@@ -89,6 +90,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
             if (compruebaCampos()){
                 guardarDia();
                 setResult(RESULT_OK,iBack);
+
                 finish();
             } else{
                abrirDialogo();
@@ -99,8 +101,6 @@ public class EdicionDiaActivity extends AppCompatActivity {
         btnImagen.setOnClickListener(e->{
             elegirGaleria();
         });
-
-
     }
     //*********VERIFICA SI ES UN DIA NUEVO O NO Y LO GUARDA COMO DIADIARIO*************//
     private void guardarDia() {
@@ -108,15 +108,21 @@ public class EdicionDiaActivity extends AppCompatActivity {
             //Guardar las preferencias del dia antes de salir
             guardarDiaPreferencias(newFecha);
             //si es un dia nuevo
-             iBack.putExtra(EXTRA_EDICION_DIA,new DiaDiario(
-                     newFecha,Integer.parseInt(spValoracion.getSelectedItem().toString()),
-                     etResumenBreve.getText().toString(),etDiarioTexto.getText().toString()));
+            DiaDiario newDia = new DiaDiario(
+                    newFecha,Integer.parseInt(spValoracion.getSelectedItem().toString()),
+                    etResumenBreve.getText().toString(),etDiarioTexto.getText().toString());
+             iBack.putExtra(EXTRA_EDICION_DIA,newDia);
+
+            if (uriFoto != null){
+                newDia.setFotoUri(String.valueOf(uriFoto)); //si el usuario ha elegido una foto entonces la establecemos en el objeto diaDiario
+            }
          }else{ //si ya existe
             diaDiario.setContenido(etDiarioTexto.getText().toString());
             //asi me quito un error
             if (diaDiario.getFecha() != null){
                 diaDiario.setFecha(diaDiario.getFecha());
             }
+            diaDiario.setFotoUri(String.valueOf(uriFoto)); //Asigna la uri de la imagen a mostrar
             diaDiario.setValoracionDia(Integer.parseInt(spValoracion.getSelectedItem().toString()));
             diaDiario.setResumen(etResumenBreve.getText().toString());
             // diaDiario.setFotoUri();
@@ -124,8 +130,6 @@ public class EdicionDiaActivity extends AppCompatActivity {
             guardarDiaPreferencias(diaDiario.getFecha());
             iBack.putExtra(EXTRA_EDICION_DIA,diaDiario); //el mismo que nos dan se devuelve
          }
-
-
     }
     //*************GUARDA LA FECHA DE EL DIADIARIO AL QUE SE REFIERE EN EL FICHERO DE PREFERENCIAS*********//
     private void guardarDiaPreferencias(Date fecha){
@@ -153,7 +157,6 @@ public class EdicionDiaActivity extends AppCompatActivity {
                         //no hace nada, solo avisa
                     }
                 }).show();
-
     }
 
     //comprueba que el objeto puede ser creado y enviado a la activity principal
@@ -220,7 +223,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
             switch (requestCode){
                 case STATUS_CODE_SELECCION_IMAGEN:
                     uriFoto = data.getData();
-                    muestraFoto();
+                    muestraFoto(); //muestra la imagen
                     break;
             }
         }

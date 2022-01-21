@@ -8,6 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="hombre">#DAF4FF</color>
-    <color name="mujer">#FBEBFD</color>
+    <color name="mujer">#FAD5FF</color>
     <color name="otro">#FFFFFF</color>
 </resources>
