@@ -51,4 +51,6 @@
     <string name="stAvisarEscribir">Avisar escribir en Diario</string>
     <string name="stAvisarEscribirDescripcion">Desea que le avisemos que tiene que escribir en el diario</string>
     <string name="stSeleccioneImagen">Seleccione una imagen</string>
+    <string name="stTomarFoto">Tomar foto</string>
+    <string name="stElegirGaleria">Elegir de la galería</string>
 </resources>

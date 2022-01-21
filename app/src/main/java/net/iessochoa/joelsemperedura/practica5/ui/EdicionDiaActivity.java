@@ -31,6 +31,7 @@ import java.util.Date;
 public class EdicionDiaActivity extends AppCompatActivity {
     public static String EXTRA_EDICION_DIA = "EdicionDiaActivity.diaDiario"; // el objeto diaDiario que llega
     private static final int STATUS_CODE_SELECCION_IMAGEN = 300;
+    private static final int MY_PERMISSIONS = 100;
 
     DiaDiario diaDiario;
     Intent iBack; //Devolver a la actividad principal el intent
@@ -99,7 +100,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
 
         //Boton imagen
         btnImagen.setOnClickListener(e->{
-            elegirGaleria();
+            muestraOpcionesImagen();
         });
     }
     //*********VERIFICA SI ES UN DIA NUEVO O NO Y LO GUARDA COMO DIADIARIO*************//
@@ -215,6 +216,29 @@ public class EdicionDiaActivity extends AppCompatActivity {
                 .load(uriFoto) // Uri of the picture
                 .into(ivImagenDia);//imageView
     }
+    //Muestra las opciones para la imagen
+    private void muestraOpcionesImagen() {
+        final CharSequence[] option = {getString(R.string.stTomarFoto),
+                getString(R.string.stElegirGaleria), getString(android.R.string.cancel)};
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(android.R.string.dialog_alert_title);
+        builder.setItems(option, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        //TODO : abrirCamara();//opcional p4
+                        break;
+                    case 1:
+                        elegirGaleria();
+                        break;
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
