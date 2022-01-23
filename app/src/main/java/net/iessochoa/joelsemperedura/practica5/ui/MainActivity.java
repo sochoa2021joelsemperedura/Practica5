@@ -8,10 +8,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -46,6 +46,7 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
     public static final int OPTION_REQUEST_NUEVA = 0; //nuevo día
     public static final int OPTION_REQUEST_MODIFICAR = 1; //modificar día
+
     RecyclerView rvLista;
     // nos permite mantener los datos cuando se reconstruye la actividad
     private DiarioViewModel diarioViewModel;
@@ -53,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     private SearchView svBusqueda;
     private SharedPreferences sharedPreferences;
+    ConstraintLayout clPrincipal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,43 +75,15 @@ public class MainActivity extends AppCompatActivity {
             rvLista.setLayoutManager(new LinearLayoutManager(this));
         else
             rvLista.setLayoutManager(new GridLayoutManager(this, 2));//2 es el num columnas
-        //Evento swiper y manejo
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new
-                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |
-                        ItemTouchHelper.RIGHT) {
-                    @Override
-                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                        return false;
-                    }
-                    @Override
-                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                        //realizamos un cast del viewHolder y obtenemos el dia borrar
-                        DiaDiario diaDelete=((DiarioListAdapter.DiarioViewHolder)viewHolder).getDia();
-                        borrarDia(diaDelete);
-
-                        //Si cambia borra, si se le da a cancelar vuelve a dibujar
-                        adapter.notifyDataSetChanged();
-
-                        //final int posicion=viewHolder.getBindingAdapterPosition();
-                        //adapter.notifyItemChanged(posicion);
-                    }
-                };
-
-        //Creamos el objeto de ItemTouchHelper que se encargará del trabajo
-        ItemTouchHelper itemTouchHelper = new
-                ItemTouchHelper(simpleItemTouchCallback);
-        //lo asociamos a nuestro reciclerView
-        itemTouchHelper.attachToRecyclerView(rvLista);
-
-
-    //Recuperacion o creacion del viewModel
+        //Comportamiento del item al deslizar el item
+        onItemSwiped(adapter,rvLista);
+        //Recuperacion o creacion del viewModel
         diarioViewModel = new ViewModelProvider(this).get(DiarioViewModel.class);
         //Observer
         diarioViewModel.getAllDiarios().observe(this, new Observer<List<DiaDiario>>() {
             @Override
             public void onChanged(List<DiaDiario> diaDiarios) {
                adapter.setDiarios(diaDiarios);
-               //Log.d("P5","tamaño: "+diaDiarios.size());
             }
         });
 
@@ -154,6 +129,36 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+    //Comportamiento del item al ser deslizado
+    private void onItemSwiped(DiarioListAdapter adapter, RecyclerView rvLista) {
+        //Evento swiper y manejo
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT |
+                        ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+                    @Override
+                    public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                        //realizamos un cast del viewHolder y obtenemos el dia borrar
+                        DiaDiario diaDelete=((DiarioListAdapter.DiarioViewHolder)viewHolder).getDia();
+                        borrarDia(diaDelete);
+
+                        //Si cambia borra, si se le da a cancelar vuelve a dibujar
+                        adapter.notifyDataSetChanged();
+
+                        //final int posicion=viewHolder.getBindingAdapterPosition();
+                        //adapter.notifyItemChanged(posicion);
+                    }
+                };
+
+        //Creamos el objeto de ItemTouchHelper que se encargará del trabajo
+        ItemTouchHelper itemTouchHelper = new
+                ItemTouchHelper(simpleItemTouchCallback);
+        //lo asociamos a nuestro reciclerView
+        itemTouchHelper.attachToRecyclerView(rvLista);
     }
 
     @Override
@@ -248,6 +253,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         rvLista = findViewById(R.id.rvLista);
         svBusqueda = findViewById(R.id.svBusqueda);
+        clPrincipal = findViewById(R.id.clItems);
     }
 
     //*************************CRUD****************************//

@@ -1,17 +1,27 @@
 package net.iessochoa.joelsemperedura.practica5.ui;
+import static android.Manifest.permission.CAMERA;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,8 +29,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.snackbar.Snackbar;
 
 import net.iessochoa.joelsemperedura.practica5.R;
 import net.iessochoa.joelsemperedura.practica5.model.DiaDiario;
@@ -44,6 +56,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
     EditText etDiarioTexto;
     Button btnImagen;
     ImageView ivImagenDia;
+    ConstraintLayout clPrincipal;
 
     Date newFecha;
     private Uri uriFoto = null;
@@ -79,13 +92,12 @@ public class EdicionDiaActivity extends AppCompatActivity {
             muestraFoto(); //se carga en el ImageView gracias al metodo Glide
 
         }
-
-
+        //permite ocultar teclado
+        ocultarTeclado();
         //Boton fecha abrira un DatePickerDialog
         btnFecha.setOnClickListener(e->{
             onClickFecha();
         });
-
         //Operaciones realizadas al pulsar el boton guardar
         btnGuardar.setOnClickListener(e->{
             if (compruebaCampos()){
@@ -97,12 +109,36 @@ public class EdicionDiaActivity extends AppCompatActivity {
                abrirDialogo();
             }
         });
-
         //Boton imagen
         btnImagen.setOnClickListener(e->{
-            muestraOpcionesImagen();
+            if (noNecesarioSolicitarPermisos()){
+                muestraOpcionesImagen();
+            }else{
+
+            }
+
         });
     }
+
+    //**********PERMISOS USUARIO*************//
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[]
+            permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+        if (requestCode == MY_PERMISSIONS) {
+            if (grantResults.length == 2 && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED && grantResults[1] ==
+                    PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, getString(R.string.stPermisosAceptados),
+                        Toast.LENGTH_SHORT).show();
+                muestraOpcionesImagen();
+            } else {//si no se aceptan los permisos
+                muestraExplicacionDenegacionPermisos();
+            }
+        }
+    }
+
     //*********VERIFICA SI ES UN DIA NUEVO O NO Y LO GUARDA COMO DIADIARIO*************//
     private void guardarDia() {
         if (diaDiario == null){
@@ -238,8 +274,79 @@ public class EdicionDiaActivity extends AppCompatActivity {
         });
         builder.show();
     }
+    //si devuelve false hay que pedir los permisos
+    //Comprueba que se han establecido los permisos requeridos para el correcto funcionamiento de las opciones que la aplicacion nos proporciona
+    private boolean noNecesarioSolicitarPermisos() {
+        //si la versión es inferior a la 6
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true;
+        //comprobamos si tenemos los permisos
+        if ((checkSelfPermission(WRITE_EXTERNAL_STORAGE) ==
+                PackageManager.PERMISSION_GRANTED) &&
+                (checkSelfPermission(CAMERA) ==
+                        PackageManager.PERMISSION_GRANTED))
+            return true;
+        //indicamos al usuario porqué necesitamos los permisos siempre que no haya indicado que no lo volvamos a hacer
+        if ((shouldShowRequestPermissionRationale(WRITE_EXTERNAL_STORAGE)) ||
+                (shouldShowRequestPermissionRationale(CAMERA))) {
+            Snackbar.make(clPrincipal, getString(R.string.stPedirPermisos),
+                    Snackbar.LENGTH_INDEFINITE).setAction(android.R.string.ok,
+                    new View.OnClickListener() {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onClick(View v) {
+                            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,
+                                    CAMERA}, MY_PERMISSIONS);
+                        }
+                    }).show();
+        } else {//pedimos permisos sin indicar el porqué
+            requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, CAMERA},
+                    MY_PERMISSIONS);
+        }
+        return false;//necesario pedir permisos
+    }
+    /**
+     * Si se deniegan los permisos mostramos las opciones de la aplicación
+     para que el usuario acepte los permisos
+     */
+    private void muestraExplicacionDenegacionPermisos() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.stPeticionPermisos));
+                builder.setMessage(getString(R.string.stRequerirPermisos));
+        builder.setPositiveButton(android.R.string.ok, new
+                DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent();
 
-
+                        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        Uri uri = Uri.fromParts("package", getPackageName(), null);
+                        intent.setData(uri);
+                        startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton(android.R.string.cancel, new
+                DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                });
+        builder.show();
+    }
+    /**
+     * Permite ocultar el teclado
+     */
+    private void ocultarTeclado() {
+        InputMethodManager imm = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        // mgr.showSoftInput(etDatos, InputMethodManager.HIDE_NOT_ALWAYS);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(etResumenBreve.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(etDiarioTexto.getWindowToken(), 0);
+        }
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -255,6 +362,7 @@ public class EdicionDiaActivity extends AppCompatActivity {
 
 
     public void iniciaViews(){
+        clPrincipal = findViewById(R.id.clPrincipal);
         spValoracion = findViewById(R.id.spValoracion);
         btnFecha = findViewById(R.id.btnFecha);
         tvFecha = findViewById(R.id.tvFecha);

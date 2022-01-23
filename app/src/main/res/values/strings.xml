@@ -53,4 +53,8 @@
     <string name="stSeleccioneImagen">Seleccione una imagen</string>
     <string name="stTomarFoto">Tomar foto</string>
     <string name="stElegirGaleria">Elegir de la galería</string>
+    <string name="stPedirPermisos">Necesito los permisos para poder elegir una foto</string>
+    <string name="stPeticionPermisos">Petición de Permisos</string>
+    <string name="stRequerirPermisos">Necesito los permisos para seleccionar una foto</string>
+    <string name="stPermisosAceptados">Permisos aceptados</string>
 </resources>

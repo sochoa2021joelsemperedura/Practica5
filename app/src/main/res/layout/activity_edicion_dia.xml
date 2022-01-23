@@ -49,10 +49,10 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/clPrincipal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_anchor="@+id/constraintLayout"
+        app:layout_anchor="@+id/clPrincipal"
         app:layout_anchorGravity="center">
 
         <androidx.cardview.widget.CardView
@@ -149,6 +149,8 @@
 
         <ImageView
             android:id="@+id/ivImagenDia"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:layout_marginTop="72dp"
