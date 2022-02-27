@@ -97,7 +97,7 @@ public class DiarioListAdapter extends ListAdapter<DiaDiario, DiarioListAdapter.
                     listener.onItemClick(getItem(posicion));
                 }
             });
-            itemView.setOnClickListener( v->{
+            ivBorrarItem.setOnClickListener( v->{
                 int posicion = getAdapterPosition();
                 if (listenerBorrar!=null && posicion != RecyclerView.NO_POSITION){
                     listenerBorrar.onItemBorrarClick(getItem(posicion));
