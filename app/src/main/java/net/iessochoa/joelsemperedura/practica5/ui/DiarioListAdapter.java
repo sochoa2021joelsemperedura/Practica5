@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import net.iessochoa.joelsemperedura.practica5.R;
@@ -19,10 +21,7 @@ import net.iessochoa.joelsemperedura.practica5.viewmodels.DiarioViewModel;
 
 import java.util.List;
 
-public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.DiarioViewHolder> {
-    private final LayoutInflater mInflater;
-    //Lista con las tareas a mostrar
-    private List<DiaDiario> mDiarios; //
+public class DiarioListAdapter extends ListAdapter<DiaDiario, DiarioListAdapter.DiarioViewHolder> {
     //definimos la interface para el control del click
     private onItemClickListener listener;
     private onItemBorrarClickListener listenerBorrar;
@@ -48,15 +47,17 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
     @NonNull
     @Override
     public DiarioViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView =mInflater.inflate(R.layout.item_dia,parent,false);
+
+        View itemView =LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_dia,parent,false);
         return new DiarioViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull DiarioViewHolder holder, int position) {
         //Si hay tareas las recuperamos
-        if (mDiarios != null) {
-            final DiaDiario diaDiario = mDiarios.get(position);
+        if (getItemCount() > 0) {
+            final DiaDiario diaDiario = getItem(position);
             holder.tvResumenItem.setText(diaDiario.getResumen());
             holder.tvFechaItem.setText(diaDiario.getFechaFormatoLocal());
 
@@ -71,16 +72,8 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
 
         }
     }
-
-    @Override
-    public int getItemCount() {
-        if (mDiarios != null)
-            return mDiarios.size();
-        else return 0;
-    }
-    void setDiarios(List<DiaDiario> diarios){
-        mDiarios=diarios;
-        notifyDataSetChanged();
+    public DiaDiario getDiaDiarioAt(int posicion){
+        return getItem(posicion);
     }
 
     public class DiarioViewHolder extends RecyclerView.ViewHolder {
@@ -98,36 +91,23 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
             super(itemView);
             iniciaViews();
 
-            //BORRAR ITEM DIA
-            ivBorrarItem.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View view) {
-                    if (listenerBorrar != null){
-                        //si se pulsa al icono borrar, le pasamos la nota. Podemos saber la posición del item en la lista
-                        listenerBorrar.onItemBorrarClick(mDiarios.get( DiarioViewHolder.this.getAdapterPosition()));
-
-                    }
+            itemView.setOnClickListener( v ->{
+                int posicion = getAdapterPosition();
+                if (listener!=null && posicion != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(getItem(posicion));
                 }
             });
-            //ABRIR ITEM DIA
-            cvItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null){
-                        listener.onItemClick(mDiarios.get(DiarioViewHolder.this.getAdapterPosition()));
-                    }
+            itemView.setOnClickListener( v->{
+                int posicion = getAdapterPosition();
+                if (listenerBorrar!=null && posicion != RecyclerView.NO_POSITION){
+                    listenerBorrar.onItemBorrarClick(getItem(posicion));
                 }
             });
-
-
-
 
         }
 
-        //Practica 5 p2 - Punto 37
-        public DiaDiario getDia(){ //nos devuelve el dia que muestra
-            return mDiarios.get(DiarioViewHolder.this
-                    .getBindingAdapterPosition());
+        public DiaDiario getDia(){
+            return getCurrentList().get(DiarioViewHolder.this.getBindingAdapterPosition());
         }
 
         private void iniciaViews() {
@@ -140,7 +120,22 @@ public class DiarioListAdapter extends RecyclerView.Adapter<DiarioListAdapter.Di
             this.cvItem = itemView.findViewById(R.id.cvItem);
         }
     }
-    DiarioListAdapter(Context context){
-        mInflater=LayoutInflater.from(context);
+    protected DiarioListAdapter(){
+        super(DIFF_CALLBACK);
     }
+
+    private static final DiffUtil.ItemCallback<DiaDiario> DIFF_CALLBACK = new DiffUtil.ItemCallback<DiaDiario>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull DiaDiario oldItem, @NonNull DiaDiario newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull DiaDiario oldItem, @NonNull DiaDiario newItem) {
+            return oldItem.getResumen().equals(newItem.getResumen()) &&
+                    oldItem.getContenido().equals(newItem.getContenido()) &&
+                    oldItem.getFecha().equals(newItem.getFecha()) &&
+                    oldItem.getValoracionDia() == newItem.getValoracionDia();
+        }
+    };
 }

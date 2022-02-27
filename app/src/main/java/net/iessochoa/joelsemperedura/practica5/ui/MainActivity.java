@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         //Preferencias por defecto
         PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false);
         //***establece el layout del reclyclerView y le añade el adapter***//
-        final DiarioListAdapter adapter = new DiarioListAdapter(this);
+        final DiarioListAdapter adapter = new DiarioListAdapter();
         rvLista.setAdapter(adapter);
         //Dos formas de visualizacion del RecyclerView segun su orientacion
         int orientation = getResources().getConfiguration().orientation;
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         diarioViewModel.getAllDiarios().observe(this, new Observer<List<DiaDiario>>() {
             @Override
             public void onChanged(List<DiaDiario> diaDiarios) {
-               adapter.setDiarios(diaDiarios);
+               adapter.submitList(diaDiarios);
             }
         });
 
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         });
         //Buscar diaDiarios
         //Asignar el observer a la busqueda hecha. si hay cambiaos actualizar adaptador
-        diarioViewModel.getByResumen().observe(this, diaDiarios -> adapter.setDiarios(diaDiarios));
+        diarioViewModel.getByResumen().observe(this, diaDiarios -> adapter.getCurrentList());
         //Cuando cambie el campo de busqueda, transformation.switchMap cambiara la condicion de busqueda del livedata
         svBusqueda.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false); //TODO : Prguntar como recuperar los valores del settings
+        PreferenceManager.setDefaultValues(this,R.xml.root_preferences,false);
         //Si la pantalla es grande establece un titulo diferente
         defineTituloApp();
         //Color segun genero seleccionado

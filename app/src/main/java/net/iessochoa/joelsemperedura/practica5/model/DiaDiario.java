@@ -13,6 +13,8 @@ import androidx.room.PrimaryKey;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
+
 //TODO hacer la base de datos
 @Entity(tableName = DiaDiario.TABLE_NAME,
         indices = {@Index(value = {DiaDiario.FECHA},unique = true)})
@@ -210,4 +212,17 @@ public class DiaDiario implements Parcelable {
             return new DiaDiario[size];
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        DiaDiario diaDiario = (DiaDiario) o;
+        return id == diaDiario.id && valoracionDia == diaDiario.valoracionDia && fecha.equals(diaDiario.fecha) && resumen.equals(diaDiario.resumen) && contenido.equals(diaDiario.contenido) && fotoUri.equals(diaDiario.fotoUri);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, fecha, valoracionDia, resumen, contenido, fotoUri);
+    }
 }
